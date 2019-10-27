@@ -9,6 +9,7 @@ export interface BloodBankData {
   //   filterByCity: string;
   //   filterByBlodType: string;
   // };
+  rowsPerPage: number;
   pageNumber: number;
   rawData: {
     city: string;
