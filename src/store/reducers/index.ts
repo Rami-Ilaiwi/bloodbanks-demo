@@ -1,11 +1,14 @@
 import { combineReducers } from "redux";
 import data from "./data";
-import { BloodBank, BloodBankData } from "../../types/types";
+import pagination from "./pagination";
+import { PaginationType, BloodBank } from "../../types/types";
 
 export interface IState {
-  data: BloodBankData;
+  data: Array<BloodBank>;
+  pagination: PaginationType;
 }
 
 export default combineReducers({
-  data
+  data,
+  pagination
 });

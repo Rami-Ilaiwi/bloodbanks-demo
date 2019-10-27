@@ -1,7 +1,6 @@
 import { IState } from "../reducers";
 
-export const selectData = (state: IState) => state.data;
-export const selectTableContent = (state: IState) => selectData(state).rawData;
-export const selectPageNumber = (state: IState) => selectData(state).pageNumber;
+export const selectTableContent = (state: IState) => state.data;
+export const selectPageNumber = (state: IState) => state.pagination.pageNumber;
 export const selectRowsPerPage = (state: IState) =>
-  selectData(state).rowsPerPage;
+  state.pagination.rowsPerPage;
