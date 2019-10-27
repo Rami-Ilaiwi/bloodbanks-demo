@@ -1,10 +1,9 @@
-import { createStyles, Theme, lighten } from "@material-ui/core/styles";
+import { createStyles } from "@material-ui/core/styles";
 
 export const styles = createStyles({
   root: {
-    width: "70%",
-    overflowX: "auto",
-    margin: "2%"
+    width: "90%",
+    overflowX: "auto"
   },
   table: {
     minWidth: 650
@@ -14,5 +13,8 @@ export const styles = createStyles({
   },
   body: {
     textAlign: "center"
+  },
+  searchInput: {
+    width: 100
   }
 });

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -19,10 +19,11 @@ interface BloodBankTableProps {
 const BloodBankTable: React.FC<
   BloodBankTableProps & WithStyles<typeof styles>
 > = ({ classes, data }) => {
-  const [order, setOrder] = React.useState<OrderType>("asc");
-  const [orderBy, setOrderBy] = React.useState("calories");
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [order, setOrder] = useState<OrderType>("asc");
+  const [orderBy, setOrderBy] = useState("calories");
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [tableContent, setTableContent] = useState<Array<BloodBank>>(data);
 
   const handleRequestSort = (event: any, property: any) => {
     const isDesc = orderBy === property && order === "desc";
@@ -30,13 +31,57 @@ const BloodBankTable: React.FC<
     setOrderBy(property);
   };
 
-  const handleChangePage = (event: any, newPage: any) => {
+  const handleChangePage = (
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent> | null,
+    newPage: number
+  ) => {
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = (event: any) => {
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
+  };
+
+  const handleSearchHospital = (
+    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+  ) => {
+    const item = event.target.value.toLowerCase();
+    const prevContent = tableContent;
+    setTableContent(
+      prevContent.filter(i => {
+        return i.hospital.toLowerCase().search(item) !== -1;
+      })
+    );
+  };
+
+  const handleSearchCity = (
+    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+  ) => {
+    const item = event.target.value.toLowerCase();
+    const prevContent = tableContent;
+    console.log(
+      prevContent.filter(i => i.city.toLowerCase().search(item) !== -1)
+    );
+    setTableContent(
+      prevContent.filter(i => {
+        return i.city.toLowerCase().search(item) !== -1;
+      })
+    );
+  };
+
+  const handleSearchBloodType = (
+    event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+  ) => {
+    const item = event.target.value.toLowerCase();
+    const prevContent = tableContent;
+    setTableContent(
+      prevContent.filter(i => {
+        return i.bloodType.toLowerCase().search(item) !== -1;
+      })
+    );
   };
 
   return (
@@ -47,9 +92,12 @@ const BloodBankTable: React.FC<
             order={order}
             orderBy={orderBy}
             onRequestSort={handleRequestSort}
+            onSearchHospital={handleSearchHospital}
+            onSearchBloodType={handleSearchBloodType}
+            onSearchCity={handleSearchCity}
           />
           <TableBody>
-            {stableSort(data, getSorting(order, orderBy))
+            {stableSort(tableContent, getSorting(order, orderBy))
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row: BloodBank, index: any) => {
                 return (
