@@ -21,17 +21,6 @@ export const createBloodBankBloodType = (
   expire: moment(randomFutureDate()).format("D/MM/YYYY HH:mm")
 });
 
-export const createBloodBank = (city: string, hospital: string) => [
-  createBloodBankBloodType(city, hospital, "AB+"),
-  createBloodBankBloodType(city, hospital, "AB-"),
-  createBloodBankBloodType(city, hospital, "A+"),
-  createBloodBankBloodType(city, hospital, "A-"),
-  createBloodBankBloodType(city, hospital, "B+"),
-  createBloodBankBloodType(city, hospital, "B-"),
-  createBloodBankBloodType(city, hospital, "O+"),
-  createBloodBankBloodType(city, hospital, "O-")
-];
-
 export const desc = (a: any, b: any, orderBy: any) => {
   if (b[orderBy] < a[orderBy]) {
     return -1;

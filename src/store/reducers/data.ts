@@ -1,6 +1,18 @@
 import { createReducer } from "redux-act";
-import { createBloodBank } from "../../utils/utils";
-import { BloodBank } from "../../types/types";
+import { createBloodBankBloodType } from "../../utils/utils";
+import { BloodBank, BloodBankData } from "../../types/types";
+import { setPageNumber } from "../actions/bloodBankActions";
+
+const createBloodBank = (city: string, hospital: string) => [
+  createBloodBankBloodType(city, hospital, "AB+"),
+  createBloodBankBloodType(city, hospital, "AB-"),
+  createBloodBankBloodType(city, hospital, "A+"),
+  createBloodBankBloodType(city, hospital, "A-"),
+  createBloodBankBloodType(city, hospital, "B+"),
+  createBloodBankBloodType(city, hospital, "B-"),
+  createBloodBankBloodType(city, hospital, "O+"),
+  createBloodBankBloodType(city, hospital, "O-")
+];
 
 const data = [
   ...createBloodBank("Ramallah", "Ramallah Hospital"),
@@ -9,14 +21,17 @@ const data = [
 ];
 
 const storeState = {
-  filter: {
-    filterByHospitalName: "",
-    filterByCity: "",
-    filterByBlodType: ""
-  },
+  //   filter: {
+  //     filterByHospitalName: "",
+  //     filterByCity: "",
+  //     filterByBlodType: ""
+  //   },
+  pageNumber: 0,
   rawData: data
 };
 
-const dataReducer = createReducer<Array<BloodBank>>({}, data);
-
+const dataReducer = createReducer<BloodBankData>({}, storeState);
+dataReducer.on(setPageNumber, (state, payload) => {
+  return { ...state, pageNumber: payload };
+});
 export default dataReducer;

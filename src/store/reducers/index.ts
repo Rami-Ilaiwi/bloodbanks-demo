@@ -1,9 +1,9 @@
 import { combineReducers } from "redux";
 import data from "./data";
-import { BloodBank } from "../../types/types";
+import { BloodBank, BloodBankData } from "../../types/types";
 
 export interface IState {
-  data: Array<BloodBank>;
+  data: BloodBankData;
 }
 
 export default combineReducers({

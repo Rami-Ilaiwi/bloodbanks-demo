@@ -2,7 +2,7 @@ import React from "react";
 import BloodBankTable from "../components/BloodBankTable";
 import { connect } from "react-redux";
 import { BloodBank } from "../types/types";
-import { selectData } from "../store/selectors/data";
+import { selectTableContent } from "../store/selectors/data";
 import Header from "../components/Header";
 
 interface EnhancedTableProps {
@@ -19,7 +19,7 @@ const EnhancedTable: React.FC<EnhancedTableProps> = ({ data }) => {
 };
 
 const mapStateToProps = (state: any) => ({
-  data: selectData(state)
+  data: selectTableContent(state)
 });
 
 export default connect(mapStateToProps)(EnhancedTable);

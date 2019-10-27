@@ -11,17 +11,22 @@ import Button from "@material-ui/core/Button";
 import { stableSort, getSorting } from "../utils/utils";
 import { BloodBank, OrderType } from "../types/types";
 import BloodPagination from "./BloodPagination";
+import { connect } from "react-redux";
+import { setPageNumber } from "../store/actions/bloodBankActions";
+import { selectPageNumber } from "../store/selectors/data";
 
 interface BloodBankTableProps {
   data: Array<BloodBank>;
+  onChangePage: (page: number) => void;
+  page: number;
 }
 
 const BloodBankTable: React.FC<
   BloodBankTableProps & WithStyles<typeof styles>
-> = ({ classes, data }) => {
+> = ({ classes, data, onChangePage, page }) => {
   const [order, setOrder] = useState<OrderType>("asc");
-  const [orderBy, setOrderBy] = useState("calories");
-  const [page, setPage] = useState(0);
+  const [orderBy, setOrderBy] = useState("quantity");
+  // const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [tableContent, setTableContent] = useState<Array<BloodBank>>(data);
 
@@ -35,14 +40,14 @@ const BloodBankTable: React.FC<
     event: React.MouseEvent<HTMLButtonElement, MouseEvent> | null,
     newPage: number
   ) => {
-    setPage(newPage);
+    onChangePage(newPage);
   };
 
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
+    onChangePage(0);
   };
 
   const handleSearchHospital = (
@@ -130,4 +135,17 @@ const BloodBankTable: React.FC<
   );
 };
 
-export default withStyles(styles)(BloodBankTable);
+const styledTable = withStyles(styles)(BloodBankTable);
+
+const mapStateToProps = (state: any) => ({
+  page: selectPageNumber(state)
+});
+
+const mapDispatchToProps = (dispatch: any) => ({
+  onChangePage: (page: number) => dispatch(setPageNumber(page))
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(styledTable);
