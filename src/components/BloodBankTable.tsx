@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -8,7 +8,6 @@ import EnhancedTableHead from "./EnhancedTableHead";
 import { withStyles, WithStyles } from "@material-ui/core/styles";
 import { styles } from "../styles/styles";
 import Button from "@material-ui/core/Button";
-// import { stableSort, getSorting } from "../utils/utils";
 import { BloodBank, OrderType } from "../types/types";
 import BloodPagination from "./BloodPagination";
 import { connect } from "react-redux";
@@ -21,9 +20,15 @@ import {
   selectRowsPerPage,
   selectRows,
   selectOrder,
-  selectOrderBy
+  selectOrderBy,
+  selectSortedRows
 } from "../store/selectors/data";
 import { setOrderBy, setOrder } from "../store/actions/sortAction";
+import {
+  setFilterByHospital,
+  setFilterByCity,
+  setFilterByBloodType
+} from "../store/actions/searchDataAction";
 
 interface BloodBankTableProps {
   data: Array<BloodBank>;
@@ -36,6 +41,9 @@ interface BloodBankTableProps {
   rows: Array<BloodBank>;
   order: OrderType;
   orderBy: string;
+  onChangeSearchHospitalInput: (hospitalSearch: string) => void;
+  onChangeSearchCityInput: (hospitalSearch: string) => void;
+  onChangeSearchBloodTypeInput: (hospitalSearch: string) => void;
 }
 
 const BloodBankTable: React.FC<
@@ -51,12 +59,11 @@ const BloodBankTable: React.FC<
   onOrder,
   rows,
   order,
-  orderBy
+  orderBy,
+  onChangeSearchHospitalInput,
+  onChangeSearchCityInput,
+  onChangeSearchBloodTypeInput
 }) => {
-  // const [order, setOrder] = useState<OrderType>("asc");
-  // const [orderBy, setOrderBy] = useState("hospital");
-  const [tableContent, setTableContent] = useState<Array<BloodBank>>(data);
-
   const handleRequestSort = (
     event: React.MouseEvent<HTMLSpanElement, MouseEvent>,
     property: any
@@ -83,40 +90,19 @@ const BloodBankTable: React.FC<
   const handleSearchHospital = (
     event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
   ) => {
-    const item = event.target.value.toLowerCase();
-    const prevContent = tableContent;
-    setTableContent(
-      prevContent.filter(i => {
-        return i.hospital.toLowerCase().search(item) !== -1;
-      })
-    );
+    onChangeSearchHospitalInput(event.target.value.toLowerCase());
   };
 
   const handleSearchCity = (
     event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
   ) => {
-    const item = event.target.value.toLowerCase();
-    const prevContent = tableContent;
-    console.log(
-      prevContent.filter(i => i.city.toLowerCase().search(item) !== -1)
-    );
-    setTableContent(
-      prevContent.filter(i => {
-        return i.city.toLowerCase().search(item) !== -1;
-      })
-    );
+    onChangeSearchCityInput(event.target.value.toLowerCase());
   };
 
   const handleSearchBloodType = (
     event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
   ) => {
-    const item = event.target.value.toLowerCase();
-    const prevContent = tableContent;
-    setTableContent(
-      prevContent.filter(i => {
-        return i.bloodType.toLowerCase().search(item) !== -1;
-      })
-    );
+    onChangeSearchBloodTypeInput(event.target.value.toLowerCase());
   };
 
   return (
@@ -166,6 +152,7 @@ const BloodBankTable: React.FC<
 const styledTable = withStyles(styles)(BloodBankTable);
 
 const mapStateToProps = (state: any) => ({
+  data: selectSortedRows(state),
   page: selectPageNumber(state),
   rowsPerPage: selectRowsPerPage(state),
   rows: selectRows(state),
@@ -177,7 +164,13 @@ const mapDispatchToProps = (dispatch: any) => ({
   onChangePage: (page: number) => dispatch(setPageNumber(page)),
   onChangeRowsPerPage: (rows: number) => dispatch(setRowsPerPage(rows)),
   onOrder: (order: OrderType) => dispatch(setOrder(order)),
-  onOrderBy: (field: string) => dispatch(setOrderBy(field))
+  onOrderBy: (field: string) => dispatch(setOrderBy(field)),
+  onChangeSearchHospitalInput: (hospitalSearch: string) =>
+    dispatch(setFilterByHospital(hospitalSearch)),
+  onChangeSearchCityInput: (citySearch: string) =>
+    dispatch(setFilterByCity(citySearch)),
+  onChangeSearchBloodTypeInput: (bloodTypeSearch: string) =>
+    dispatch(setFilterByBloodType(bloodTypeSearch))
 });
 
 export default connect(

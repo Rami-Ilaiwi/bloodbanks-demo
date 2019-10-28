@@ -12,3 +12,9 @@ export interface SortType {
   orderBy: string;
   order: OrderType;
 }
+
+export interface SearchType {
+  filterByHospital: string;
+  filterByCity: string;
+  filterByBloodType: string;
+}

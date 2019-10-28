@@ -1,19 +1,14 @@
 import React from "react";
 import BloodBankTable from "../components/BloodBankTable";
 import { connect } from "react-redux";
-import { BloodBank } from "../types/types";
 import { selectTableContent } from "../store/selectors/data";
 import Header from "../components/Header";
 
-interface EnhancedTableProps {
-  data: Array<BloodBank>;
-}
-
-const EnhancedTable: React.FC<EnhancedTableProps> = ({ data }) => {
+const EnhancedTable = () => {
   return (
     <>
       <Header />
-      <BloodBankTable data={data} />
+      <BloodBankTable />
     </>
   );
 };

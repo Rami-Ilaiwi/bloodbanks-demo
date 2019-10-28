@@ -9,10 +9,10 @@ const paginationState = {
 
 const paginationReducer = createReducer<PaginationType>({}, paginationState);
 paginationReducer
-  .on(setPageNumber, (state, payload) => {
-    return { ...state, pageNumber: payload };
+  .on(setPageNumber, (state, pageNumber) => {
+    return { ...state, pageNumber };
   })
-  .on(setRowsPerPage, (state, payload) => {
-    return { ...state, rowsPerPage: payload };
+  .on(setRowsPerPage, (state, rowsPerPage) => {
+    return { ...state, rowsPerPage };
   });
 export default paginationReducer;

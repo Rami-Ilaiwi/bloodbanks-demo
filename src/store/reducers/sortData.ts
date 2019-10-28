@@ -1,23 +1,18 @@
 import { createReducer } from "redux-act";
-import { SortType, OrderType } from "../../types/types";
+import { SortType } from "../../types/types";
 import { setOrderBy, setOrder } from "../actions/sortAction";
 
-interface FieldStateType {
-  orderBy: string;
-  order: OrderType;
-}
-
-const fieldState: FieldStateType = {
+const fieldState: SortType = {
   orderBy: "hospital",
   order: "asc"
 };
 
 const sortDataReducer = createReducer<SortType>({}, fieldState);
 sortDataReducer
-  .on(setOrderBy, (state, payload) => {
-    return { ...state, orderBy: payload };
+  .on(setOrderBy, (state, orderBy) => {
+    return { ...state, orderBy };
   })
-  .on(setOrder, (state, payload) => {
-    return { ...state, order: payload };
+  .on(setOrder, (state, order) => {
+    return { ...state, order };
   });
 export default sortDataReducer;
