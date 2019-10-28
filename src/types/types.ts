@@ -7,3 +7,7 @@ export interface PaginationType {
   pageNumber: number;
   rowsPerPage: number;
 }
+
+export interface SortType {
+  field: string;
+}

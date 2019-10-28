@@ -16,7 +16,12 @@ import {
   setPageNumber,
   setRowsPerPage
 } from "../store/actions/bloodBankActions";
-import { selectPageNumber, selectRowsPerPage } from "../store/selectors/data";
+import {
+  selectPageNumber,
+  selectRowsPerPage,
+  selectRows
+} from "../store/selectors/data";
+import { setSortField } from "../store/actions/sortAction";
 
 interface BloodBankTableProps {
   data: Array<BloodBank>;
@@ -24,6 +29,8 @@ interface BloodBankTableProps {
   page: number;
   onChangeRowsPerPage: (rows: number) => void;
   rowsPerPage: number;
+  onRequestSort: (sort: string) => void;
+  rows: Array<BloodBank>;
 }
 
 const BloodBankTable: React.FC<
@@ -34,16 +41,22 @@ const BloodBankTable: React.FC<
   onChangePage,
   page,
   onChangeRowsPerPage,
-  rowsPerPage
+  rowsPerPage,
+  onRequestSort,
+  rows
 }) => {
   const [order, setOrder] = useState<OrderType>("asc");
-  const [orderBy, setOrderBy] = useState("quantity");
+  const [orderBy, setOrderBy] = useState("hospital");
   const [tableContent, setTableContent] = useState<Array<BloodBank>>(data);
 
-  const handleRequestSort = (event: any, property: any) => {
+  const handleRequestSort = (
+    event: React.MouseEvent<HTMLSpanElement, MouseEvent>,
+    property: any
+  ) => {
     const isDesc = orderBy === property && order === "desc";
     setOrder(isDesc ? "asc" : "desc");
     setOrderBy(property);
+    onRequestSort(property);
   };
 
   const handleChangePage = (
@@ -112,9 +125,8 @@ const BloodBankTable: React.FC<
             onSearchCity={handleSearchCity}
           />
           <TableBody>
-            {stableSort(tableContent, getSorting(order, orderBy))
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row: BloodBank, index: any) => {
+            {stableSort(rows, getSorting(order, orderBy)).map(
+              (row: BloodBank, index: any) => {
                 return (
                   <TableRow key={index}>
                     <TableCell>{row.hospital}</TableCell>
@@ -130,7 +142,8 @@ const BloodBankTable: React.FC<
                     </TableCell>
                   </TableRow>
                 );
-              })}
+              }
+            )}
           </TableBody>
         </Table>
       </div>
@@ -149,12 +162,14 @@ const styledTable = withStyles(styles)(BloodBankTable);
 
 const mapStateToProps = (state: any) => ({
   page: selectPageNumber(state),
-  rowsPerPage: selectRowsPerPage(state)
+  rowsPerPage: selectRowsPerPage(state),
+  rows: selectRows(state)
 });
 
 const mapDispatchToProps = (dispatch: any) => ({
   onChangePage: (page: number) => dispatch(setPageNumber(page)),
-  onChangeRowsPerPage: (rows: number) => dispatch(setRowsPerPage(rows))
+  onChangeRowsPerPage: (rows: number) => dispatch(setRowsPerPage(rows)),
+  onRequestSort: (sort: string) => dispatch(setSortField(sort))
 });
 
 export default connect(

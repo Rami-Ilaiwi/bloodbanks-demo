@@ -57,7 +57,9 @@ const EnhancedTableHead: React.FC<
   onSearchCity,
   onSearchBloodType
 }) => {
-  const createSortHandler = (property: any) => (event: any) => {
+  const createSortHandler = (property: any) => (
+    event: React.MouseEvent<HTMLSpanElement, MouseEvent>
+  ) => {
     onRequestSort(event, property);
   };
 
