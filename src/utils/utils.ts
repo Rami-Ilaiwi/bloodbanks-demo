@@ -1,4 +1,5 @@
 import moment from "moment";
+import { OrderType } from "../types/types";
 
 const randomDate = (start: Date, end: Date) => {
   return new Date(
@@ -41,7 +42,7 @@ export const stableSort = (array: any[], cmp: any) => {
   return stabilizedThis.map((el: any) => el[0]);
 };
 
-export const getSorting = (order: any, orderBy: any) => {
+export const getSorting = (order: OrderType, orderBy: string) => {
   return order === "desc"
     ? (a: any, b: any) => desc(a, b, orderBy)
     : (a: any, b: any) => -desc(a, b, orderBy);

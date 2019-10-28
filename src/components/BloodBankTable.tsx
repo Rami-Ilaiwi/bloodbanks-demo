@@ -8,7 +8,7 @@ import EnhancedTableHead from "./EnhancedTableHead";
 import { withStyles, WithStyles } from "@material-ui/core/styles";
 import { styles } from "../styles/styles";
 import Button from "@material-ui/core/Button";
-import { stableSort, getSorting } from "../utils/utils";
+// import { stableSort, getSorting } from "../utils/utils";
 import { BloodBank, OrderType } from "../types/types";
 import BloodPagination from "./BloodPagination";
 import { connect } from "react-redux";
@@ -19,9 +19,11 @@ import {
 import {
   selectPageNumber,
   selectRowsPerPage,
-  selectRows
+  selectRows,
+  selectOrder,
+  selectOrderBy
 } from "../store/selectors/data";
-import { setSortField } from "../store/actions/sortAction";
+import { setOrderBy, setOrder } from "../store/actions/sortAction";
 
 interface BloodBankTableProps {
   data: Array<BloodBank>;
@@ -29,8 +31,11 @@ interface BloodBankTableProps {
   page: number;
   onChangeRowsPerPage: (rows: number) => void;
   rowsPerPage: number;
-  onRequestSort: (sort: string) => void;
+  onOrder: (order: OrderType) => void;
+  onOrderBy: (orderBy: string) => void;
   rows: Array<BloodBank>;
+  order: OrderType;
+  orderBy: string;
 }
 
 const BloodBankTable: React.FC<
@@ -42,11 +47,14 @@ const BloodBankTable: React.FC<
   page,
   onChangeRowsPerPage,
   rowsPerPage,
-  onRequestSort,
-  rows
+  onOrderBy,
+  onOrder,
+  rows,
+  order,
+  orderBy
 }) => {
-  const [order, setOrder] = useState<OrderType>("asc");
-  const [orderBy, setOrderBy] = useState("hospital");
+  // const [order, setOrder] = useState<OrderType>("asc");
+  // const [orderBy, setOrderBy] = useState("hospital");
   const [tableContent, setTableContent] = useState<Array<BloodBank>>(data);
 
   const handleRequestSort = (
@@ -54,9 +62,8 @@ const BloodBankTable: React.FC<
     property: any
   ) => {
     const isDesc = orderBy === property && order === "desc";
-    setOrder(isDesc ? "asc" : "desc");
-    setOrderBy(property);
-    onRequestSort(property);
+    onOrder(isDesc ? "asc" : "desc");
+    onOrderBy(property);
   };
 
   const handleChangePage = (
@@ -125,25 +132,23 @@ const BloodBankTable: React.FC<
             onSearchCity={handleSearchCity}
           />
           <TableBody>
-            {stableSort(rows, getSorting(order, orderBy)).map(
-              (row: BloodBank, index: any) => {
-                return (
-                  <TableRow key={index}>
-                    <TableCell>{row.hospital}</TableCell>
-                    <TableCell>{row.city}</TableCell>
-                    <TableCell>{row.bloodType}</TableCell>
-                    <TableCell>{row.quantity}</TableCell>
-                    <TableCell>{row.expire}</TableCell>
-                    <TableCell>
-                      <Button>Show Details</Button>
-                    </TableCell>
-                    <TableCell>
-                      <Button>Request</Button>
-                    </TableCell>
-                  </TableRow>
-                );
-              }
-            )}
+            {rows.map((row: BloodBank, index: any) => {
+              return (
+                <TableRow key={index}>
+                  <TableCell>{row.hospital}</TableCell>
+                  <TableCell>{row.city}</TableCell>
+                  <TableCell>{row.bloodType}</TableCell>
+                  <TableCell>{row.quantity}</TableCell>
+                  <TableCell>{row.expire}</TableCell>
+                  <TableCell>
+                    <Button>Show Details</Button>
+                  </TableCell>
+                  <TableCell>
+                    <Button>Request</Button>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
       </div>
@@ -163,13 +168,16 @@ const styledTable = withStyles(styles)(BloodBankTable);
 const mapStateToProps = (state: any) => ({
   page: selectPageNumber(state),
   rowsPerPage: selectRowsPerPage(state),
-  rows: selectRows(state)
+  rows: selectRows(state),
+  order: selectOrder(state),
+  orderBy: selectOrderBy(state)
 });
 
 const mapDispatchToProps = (dispatch: any) => ({
   onChangePage: (page: number) => dispatch(setPageNumber(page)),
   onChangeRowsPerPage: (rows: number) => dispatch(setRowsPerPage(rows)),
-  onRequestSort: (sort: string) => dispatch(setSortField(sort))
+  onOrder: (order: OrderType) => dispatch(setOrder(order)),
+  onOrderBy: (field: string) => dispatch(setOrderBy(field))
 });
 
 export default connect(

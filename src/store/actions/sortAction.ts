@@ -1,3 +1,5 @@
 import { createAction } from "redux-act";
+import { OrderType } from "../../types/types";
 
-export const setSortField = createAction<string>("Set sort field");
+export const setOrderBy = createAction<string>("Set sort field");
+export const setOrder = createAction<OrderType>("Set order");

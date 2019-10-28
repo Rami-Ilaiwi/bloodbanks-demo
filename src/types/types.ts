@@ -9,5 +9,6 @@ export interface PaginationType {
 }
 
 export interface SortType {
-  field: string;
+  orderBy: string;
+  order: OrderType;
 }
